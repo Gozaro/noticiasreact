@@ -1,26 +1,67 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Header from './componentes/Header';
+import Noticias from './componentes/Noticias'
+import Formulario from './componentes/Formulario'
+
 
 class App extends Component {
+
+  state = {
+
+    noticias : []
+      
+  }
+
+  componentDidMount() {
+
+    this.consultaNoticias();
+    
+  }
+
+  consultaNoticias = (categoria = 'general') => {
+
+  
+    let url = `https://newsapi.org/v2/top-headlines?country=us&category=${categoria}&apiKey=YourAPIKeyHere`;
+
+    fetch(url)
+      .then( respuesta =>{
+        return respuesta.json();
+      })
+
+      .then(noticias => {
+        this.setState({
+          noticias : noticias.articles
+        })
+          
+      })
+
+
+
+
+  }
+
+
+
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <div className="contenedor-app">
+        
+          <Header titulo = 
+            'Noticias API' 
+          />
+        
+        <div className="container white contenedor-noticias">
+          <Formulario 
+            consultaNoticias={this.consultaNoticias}
+          />
+
+          <Noticias 
+            noticias = {this.state.noticias}
+          />
+        </div>
+
+      </div> 
     );
   }
 }
